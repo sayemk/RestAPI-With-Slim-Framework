@@ -22,13 +22,19 @@ class Login
 
 	}
 
-	public function login(&$username,&$latitude,&$longitude,&$channel)
+	public function login(&$username,&$latitude,&$longitude,&$channel,&$userPassword)
 	{
 		$this->checkUser = ($this->checkUser($username)) ? 1 : 0 ;
 
 		if(!$this->checkUser){
 			$response['status']='fail';
            	$response['data']['code']=1002;
+			return $response;
+		}
+
+		if(!$this->checkPassword($username,$userPassword)){
+			$response['status']='fail';
+           	$response['data']['code']=1004;
 			return $response;
 		}
 
@@ -88,6 +94,28 @@ class Login
            		$response['data']['code']=1000;
 	            return $response;
 			}
+		}
+	}
+
+	public function checkPassword($username='',$password)
+	{
+		try {
+			$stmt=$this->conn->prepare("SELECT user_password FROM users WHERE username=:username");
+			$stmt->bindParam(':username',$username);
+
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			$stmt->closeCursor();
+			//print_r($result);
+			if($result['user_password']==md5($password)){
+				return True;
+			}else{
+				return False;
+			}
+
+		} catch (Exception $e) {
+			$this->db->errorLog($e);
+        	return false;
 		}
 	}
 	public function checkUser($username='')

@@ -12,7 +12,7 @@ class dbconnect {
  
     function connect() {
         try {
-            $this->conn = new PDO("mysql:host=localhost;dbname=voipapi", 'root', '');
+            $this->conn = new PDO("mysql:host=localhost;dbname=voipapi", 'root', 'voipapi');
             return $this->conn;
         } catch (Exception $e) {
             $this->errorLog($e);

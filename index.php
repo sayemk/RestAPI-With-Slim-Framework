@@ -40,7 +40,7 @@ $app->get('/', function () {
 
         $response['data']['code']=1004;
       
-        echoRespnse(200,$response);  
+        echoRespnse(404,$response);  
     }
 );
 
@@ -50,12 +50,13 @@ $app->post('/register', function () use ($app) {
     //Get post Data
         $username=$app->request->post('username');
         $email=$app->request->post('email');
+        $password=$app->request->post('password');
     
-        if (isset($username) && isset($email)) {
+        if (isset($username) && isset($email) && isset($password)) {
             //Create Instance of Register class
             require ('include/Register.php');
             $register=new Register();
-            $response=$register->register($username,$email);
+            $response=$register->register($username,$email,$password);
         } else {
            $response['status']='fail';
            $response['data']['code']=1001;
@@ -73,12 +74,13 @@ $app->post('/login', function () use ($app) {
         $latitude=$app->request->post('latitude');
         $longitude=$app->request->post('longitude');
         $channel=$app->request->post('channel');
+        $password=$app->request->post('password');
     
-        if (isset($username) && isset($latitude) && isset($longitude) && isset($channel)) {
+        if (isset($username) && isset($latitude) && isset($longitude) && isset($channel) && isset($password)) {
             //Create Instance of Register class
             require ('include/Login.php');
             $login=new Login();
-            $response=$login->login($username,$latitude,$longitude,$channel);
+            $response=$login->login($username,$latitude,$longitude,$channel,$password);
         } else {
            $response['status']='fail';
            $response['data']['code']=1001;

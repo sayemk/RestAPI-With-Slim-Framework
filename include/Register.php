@@ -30,7 +30,7 @@ class Register
 		return substr(str_shuffle($chars),0,$length);
 	}
 
-	public function register($username, $email)
+	public function register($username, $email,$user_password)
 	{
 		if ($this->checkUserName($username)) {
 			$this->uniqueUser=1;
@@ -50,10 +50,10 @@ class Register
 
 				//Get Random Password
 				$password=$this->passwordHelper(5);
-				$stmt = $this->conn->prepare("INSERT INTO users(username,email,secret,r_time) 
-											VALUES(:username,:email,:secret,:r_time)");
+				$stmt = $this->conn->prepare("INSERT INTO users(username,email,secret,r_time,user_password) 
+											VALUES(:username,:email,:secret,:r_time,:user_passowrd)");
 	           
-	            $result = $stmt->execute(array(':username'=>$username, ':email'=>$email,":secret"=>$password, 'r_time'=>time()));
+	            $result = $stmt->execute(array(':username'=>$username, ':email'=>$email,":secret"=>$password, 'r_time'=>time(), 'user_passowrd'=>md5($user_password)));
 	            $stmt->closeCursor();
 
 	            //Call the Sip Register Method
